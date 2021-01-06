@@ -1,0 +1,25 @@
+#This file will configure all the backend servers
+- hosts: backend
+  tasks:
+          - name: "Installing httpd"
+            package:
+                    name: "httpd"
+                    state: present
+
+          - name: "Creating index.html file"
+            template:
+                    src: /root/index.html
+                    dest: /var/www/html/
+                    mode: 0644
+          - name: "disabling firewall"
+            package:
+                    name: "firewalld"
+                    state: removed
+          - name: "Making SELinux Permissive"
+            selinux:
+                    policy: targeted
+                    state: permissive
+          - name: "Starting httpd"
+            service:
+                    name: "httpd"
+                    state: started
