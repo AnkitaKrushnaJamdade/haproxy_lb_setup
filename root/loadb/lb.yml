@@ -1,0 +1,25 @@
+#This file will configure localhost as frontend.
+- hosts: lb
+  vars:
+          ip: "8081"
+  tasks:
+          - name: "Installing Haproxy"
+            package:
+                  name: "haproxy"
+                  state: present
+
+          - name: "Changing the IP's conf file"
+            template:
+                    src: "/etc/haproxy/haproxy.cfg"
+                    dest: "/etc/haproxy/haproxy.cfg"
+
+          - name: "Adding port 8081 to firewall"
+            firewalld:
+                     port: 8081/tcp
+                     permanent: true
+                     state: enabled
+
+          - name: "Restarting haproxy"
+            service:
+                    name: "haproxy"
+                    state: restarted
